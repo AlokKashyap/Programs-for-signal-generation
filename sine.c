@@ -1,9 +1,11 @@
 #include<stdio.h>
 #include<math.h>
+#include<stdlib.h>
     int main()
    {
-      int freq,fs,amplitude,cycle,duration,x=0,cent;
-      unsigned short int r[100000]={0};
+      int freq,fs,amplitude,cycle,duration,x=0,cent,size;
+      unsigned short int *r;  
+      r = (unsigned short int *)malloc(size*sizeof(unsigned short int )); 
       double angle,increment,sample;
       int i;
       FILE *filePtr;
@@ -17,8 +19,9 @@
       printf("enter the duration of the signal:\n");
       scanf("%d",&duration);
       angle=0;
+      size = fs*duration;
       increment=((2*M_PI*freq)/fs);
-		cent=(amplitude*65535/10);
+      cent=(amplitude*65535/10);
       while (angle<=(2*M_PI*freq*duration))
       {
          r[x]=cent+((amplitude * sin(angle))*32768/5);
@@ -27,4 +30,7 @@
          angle=angle+increment;
          x++;
       }
+      FILE *pipe = popen("gnuplot -persist","w");
+      fprintf(pipe, "set data style lines \n");
+      fprintf(pipe, "plot 'floatArray.txt'\n");
    }

@@ -1,9 +1,12 @@
 #include<stdio.h>
+#include<stdlib.h>
     int main ()
    {
       float i,step,f=2,dur=1,fs=44100,amp=5,s[100000]={0};
-      int c=0, x=1;
-      unsigned short int r[100000]={0};
+      int c=0, x=1,size;
+      unsigned short int *r;  
+      r = (unsigned short int *)malloc(size*sizeof(unsigned short int ));
+      size = fs*dur;
       FILE *filePtr;
       filePtr = fopen("floatArray.txt","w");
       step=(amp*(65535/5))*(f/fs);
@@ -33,4 +36,7 @@
       
          c++;
       }
+      FILE *pipe = popen("gnuplot -persist","w");
+      fprintf(pipe, "set data style lines \n");
+      fprintf(pipe, "plot 'floatArray.txt'\n");
    }
